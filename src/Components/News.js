@@ -99,7 +99,7 @@ export class News extends Component {
             })}
         </div>
 
-        <div className="mb-4">
+        <div className="my-4">
           <div className="d-flex justify-content-between">
             <button
               type="button"
