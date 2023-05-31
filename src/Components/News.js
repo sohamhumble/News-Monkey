@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import NewsItem from "./NewsItem";
+import Spinner from "./Spinner";
+
 const apiKey =
   // `72849d38148f458191ace20f0e169897`
   // `53a4899f08dd4967b7c7dbf8f4f2b02c`;
@@ -16,45 +18,54 @@ export class News extends Component {
     };
   }
   async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${apiKey}&pageSize=21`;
+    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${apiKey}&pageSize=${this.props.pageSize}`;
+    this.setState({loading: true});
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({
       articles: parsedData.articles,
       totalResults: parsedData.totalResults,
+      loading: false
     });
   }
 
   onClickHandleNext = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${apiKey}&pageSize=21&page=${
+    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${apiKey}&pageSize=${this.props.pageSize}&page=${
       this.state.page + 1
     }`;
+    this.setState({loading: true});
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({
       page: this.state.page + 1,
       articles: parsedData.articles,
+      loading: false,
     });
   };
 
   onClickHandlePrevious = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${apiKey}&pageSize=21&page=${
+    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${apiKey}&pageSize=${this.props.pageSize}&page=${
       this.state.page - 1
     }`;
+    this.setState({loading: true});
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({
       page: this.state.page - 1,
       articles: parsedData.articles,
+      loading: false,
     });
   };
 
   render() {
     return (
       <div className="container">
-        <h1>Top Headlines</h1>
+        <div className="text-center my-5">
+          <h1>Top Headlines</h1>
+          {this.state.loading===true && <Spinner/>}
+        </div>
         <div className="row">
-          {this.state.articles.map((item) => {
+          {this.state.loading===false && this.state.articles.map((item) => {
             return (
               <div className="col-md-6 col-lg-4" key={item.url}>
                 <NewsItem
@@ -87,7 +98,7 @@ export class News extends Component {
               onClick={this.onClickHandleNext}
               className="btn btn-danger"
               disabled={
-                Math.ceil(this.state.totalResults / 21.0) <= this.state.page
+                Math.ceil(this.state.totalResults / this.props.pageSize) <= this.state.page
               }
             >
               Next&rarr;
