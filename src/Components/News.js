@@ -28,48 +28,34 @@ export class News extends Component {
       totalResults: 0,
     };
   }
-  async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${apiKey}&pageSize=${this.props.pageSize}`;
+
+  async fetching_function(pageNo=0) {
+    let url = `https://newsapi.org/v2/top-headlines?country=${
+      this.props.country
+    }&category=${this.props.category}&apiKey=${apiKey}&pageSize=${
+      this.props.pageSize
+    }&page=${this.state.page + pageNo}`;
     this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({
       articles: parsedData.articles,
       totalResults: parsedData.totalResults,
+      page: this.state.page + pageNo,
       loading: false,
     });
   }
 
+  async componentDidMount() {
+    this.fetching_function()
+  }
+
   onClickHandleNext = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?country=${
-      this.props.country
-    }&category=${this.props.category}&apiKey=${apiKey}&pageSize=${
-      this.props.pageSize
-    }&page=${this.state.page + 1}`;
-    this.setState({ loading: true });
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    this.setState({
-      page: this.state.page + 1,
-      articles: parsedData.articles,
-      loading: false,
-    });
+    this.fetching_function(1)
   };
 
   onClickHandlePrevious = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?country=${
-      this.props.country
-    }&category=${this.props.category}&apiKey=${apiKey}&pageSize=${
-      this.props.pageSize
-    }&page=${this.state.page - 1}`;
-    this.setState({ loading: true });
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    this.setState({
-      page: this.state.page - 1,
-      articles: parsedData.articles,
-      loading: false,
-    });
+    this.fetching_function(-1)
   };
 
   render() {
@@ -79,6 +65,31 @@ export class News extends Component {
           <h1>Top Headlines</h1>
           {this.state.loading === true && <Spinner />}
         </div>
+
+        <div className="my-4">
+          <div className="d-flex justify-content-between">
+            <button
+              type="button"
+              onClick={this.onClickHandlePrevious}
+              className="btn btn-danger"
+              disabled={this.state.page <= 1}
+            >
+              &larr;Previous
+            </button>
+            <button
+              type="button"
+              onClick={this.onClickHandleNext}
+              className="btn btn-danger"
+              disabled={
+                Math.ceil(this.state.totalResults / this.props.pageSize) <=
+                this.state.page
+              }
+            >
+              Next&rarr;
+            </button>
+          </div>
+        </div>
+
         <div className="row">
           {this.state.loading === false &&
             this.state.articles.map((item) => {
@@ -125,6 +136,7 @@ export class News extends Component {
             </button>
           </div>
         </div>
+
       </div>
     );
   }

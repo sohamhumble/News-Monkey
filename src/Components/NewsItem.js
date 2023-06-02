@@ -26,7 +26,7 @@ export class NewsItem extends Component {
               rel="noreferrer"
               className="btn btn-sm btn-danger"
             >
-              Link
+              Read More
             </a>
           </div>
           <div className="card-footer">
