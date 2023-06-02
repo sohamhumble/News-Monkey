@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 const apiKey =
   // `72849d38148f458191ace20f0e169897`
@@ -93,6 +93,9 @@ export class News extends Component {
                         : item.urlToImage
                     }
                     newsUrl={item.url}
+                    author={item.author}
+                    publishedAt={item.publishedAt}
+                    source={item.source.name}
                   />
                 </div>
               );
