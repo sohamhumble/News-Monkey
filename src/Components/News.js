@@ -27,9 +27,10 @@ export class News extends Component {
       page: 1,
       totalResults: 0,
     };
+    
   }
 
-  async fetching_function(pageNo=0) {
+  async fetching_function(pageNo = 0) {
     let url = `https://newsapi.org/v2/top-headlines?country=${
       this.props.country
     }&category=${this.props.category}&apiKey=${apiKey}&pageSize=${
@@ -47,48 +48,51 @@ export class News extends Component {
   }
 
   async componentDidMount() {
-    this.fetching_function()
+    this.fetching_function();
+    document.title = `${this.props.category.charAt(0).toUpperCase() + this.props.category.slice(1)} - News Monkey`
   }
 
   onClickHandleNext = async () => {
-    this.fetching_function(1)
+    this.fetching_function(1);
   };
 
   onClickHandlePrevious = async () => {
-    this.fetching_function(-1)
+    this.fetching_function(-1);
   };
 
   render() {
     return (
       <div className="container">
         <div className="text-center my-5">
-          <h1>Top Headlines</h1>
+          <h1>Top Headlines - {`${this.props.category.charAt(0).toUpperCase() + this.props.category.slice(1)}`}</h1>
           {this.state.loading === true && <Spinner />}
         </div>
 
-        {this.state.loading===false && <div className="my-4">
-          <div className="d-flex justify-content-between">
-            <button
-              type="button"
-              onClick={this.onClickHandlePrevious}
-              className="btn btn-danger"
-              disabled={this.state.page <= 1}
-            >
-              &larr;Previous
-            </button>
-            <button
-              type="button"
-              onClick={this.onClickHandleNext}
-              className="btn btn-danger"
-              disabled={
-                Math.ceil(this.state.totalResults / this.props.pageSize) <=
-                this.state.page
-              }
-            >
-              Next&rarr;
-            </button>
+        {this.state.loading === false && (
+          <div className="my-4">
+            <div className="d-flex justify-content-between">
+              <button
+                type="button"
+                onClick={this.onClickHandlePrevious}
+                className="btn btn-danger"
+                disabled={this.state.page <= 1}
+              >
+                &larr;Previous
+              </button>
+              <button
+                type="button"
+                onClick={this.onClickHandleNext}
+                className="btn btn-danger"
+                disabled={
+                  Math.ceil(this.state.totalResults / this.props.pageSize) <=
+                  this.state.page
+                }
+              >
+                Next&rarr;
+              </button>
+            </div>
           </div>
-        </div>}
+        )}
 
         <div className="row">
           {this.state.loading === false &&
@@ -136,7 +140,6 @@ export class News extends Component {
             </button>
           </div>
         </div>
-
       </div>
     );
   }
