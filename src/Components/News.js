@@ -66,7 +66,7 @@ export class News extends Component {
           {this.state.loading === true && <Spinner />}
         </div>
 
-        <div className="my-4">
+        {this.state.loading===false && <div className="my-4">
           <div className="d-flex justify-content-between">
             <button
               type="button"
@@ -88,7 +88,7 @@ export class News extends Component {
               Next&rarr;
             </button>
           </div>
-        </div>
+        </div>}
 
         <div className="row">
           {this.state.loading === false &&
