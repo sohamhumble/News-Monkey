@@ -4,7 +4,7 @@ import loading from './Spinner.gif'
 export class Spinner extends Component {
   render() {
     return (
-      <div>
+      <div className='d-flex justify-content-center'>
           <img src={loading} alt="loading" />
       </div>
     )
