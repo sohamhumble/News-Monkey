@@ -7,7 +7,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 const apiKey =
   // `72849d38148f458191ace20f0e169897`
   `53a4899f08dd4967b7c7dbf8f4f2b02c`;
-  // `cccc36e578a1428884b931fd2ce66298`;
+// `cccc36e578a1428884b931fd2ce66298`;
 
 export class News extends Component {
   static defaultProps = {
@@ -26,28 +26,18 @@ export class News extends Component {
       articles: [],
       loading: true,
       page: 1,
-      totalResults: 0,
     };
   }
 
-  async fetching_function(pageNo = 0) {
-    let url = `https://newsapi.org/v2/top-headlines?country=${
-      this.props.country
-    }&category=${this.props.category}&apiKey=${apiKey}&pageSize=${
-      this.props.pageSize
-    }&page=${this.state.page + pageNo}`;
+  async componentDidMount() {
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${apiKey}&pageSize=${this.props.pageSize}&page=${this.state.page}`;
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({
       articles: parsedData.articles,
-      totalResults: parsedData.totalResults,
-      page: this.state.page + pageNo,
-      loading: false
+      loading: false,
+      isEnd: false,
     });
-  }
-
-  async componentDidMount() {
-    this.fetching_function();
     document.title = `${
       this.props.category.charAt(0).toUpperCase() + this.props.category.slice(1)
     } - News Monkey`;
@@ -64,9 +54,9 @@ export class News extends Component {
     let parsedData = await data.json();
     this.setState({
       articles: this.state.articles.concat(parsedData.articles),
-      totalResults: parsedData.totalResults,
       page: this.state.page + 1,
-      loading: false
+      loading: false,
+      isEnd: parsedData.articles.length === 0,
     });
   };
 
@@ -74,14 +64,20 @@ export class News extends Component {
     return (
       <div>
         <div className="text-center my-5">
-          <h1>Top Headlines - {`${this.props.category.charAt(0).toUpperCase() + this.props.category.slice(1)}`}</h1>
+          <h1>
+            Top Headlines -{" "}
+            {`${
+              this.props.category.charAt(0).toUpperCase() +
+              this.props.category.slice(1)
+            }`}
+          </h1>
           {this.state.loading === true && <Spinner />}
         </div>
 
         <InfiniteScroll
-          dataLength={this.state.articles.length} //This is important field to render the next data
+          dataLength={this.state.articles.length}
           next={this.fetchData}
-          hasMore={this.state.articles.length < this.state.totalResults}
+          hasMore={this.state.isEnd === false}
           loader={<Spinner />}
         >
           <div className="container">
