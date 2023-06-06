@@ -9,7 +9,7 @@ const App = () => {
   const apiKey = process.env.REACT_APP_NEWS_API_3;
   const [progress, setProgress] = useState(0);
 
-  const pageSize = 6;
+  const pageSize = 20;
   const country = "in";
   return (
     <div>

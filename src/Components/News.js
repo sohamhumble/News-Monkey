@@ -10,9 +10,8 @@ const News = (props) => {
   const [page, setPage] = useState(1);
   const [isEnd, setIsEnd] = useState(false);
 
-  useEffect(() => {
-    return async () => {
-      props.setProgress(10);
+  const fetching_function = async ()=>{
+    props.setProgress(10);
       let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&pageSize=${props.pageSize}&page=${page}`;
       let data = await fetch(url);
       props.setProgress(30);
@@ -26,6 +25,8 @@ const News = (props) => {
       } - News Monkey`;
       props.setProgress(100);
     };
+  useEffect(() => {
+      fetching_function()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
