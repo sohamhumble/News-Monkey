@@ -43,6 +43,8 @@ const News = (props) => {
     setIsEnd(parsedData.articles.length === 0);
   };
 
+  // const emptyString ='                                                                                                                                                                                                        ';
+
   return (
     <div>
       <div className="text-center my-5">
@@ -63,11 +65,21 @@ const News = (props) => {
         <div className="container">
           <div className="row">
             {articles.map((item) => {
+              if(item.description!=null){
               return (
                 <div className="col-md-6 col-lg-4" key={item.url}>
                   <NewsItem
-                    title={item.title}
-                    description={item.description}
+                    title={
+                      item.title.length>100?
+                      item.title.slice(0,100)+'...':
+                      item.title
+
+                    }
+                    description={
+                      item.description.length>100?
+                      item.description.slice(0,100)+'...':
+                      item.description
+                    }
                     imageUrl={
                       item.urlToImage === null
                         ? "/images/default_news_icon.jpg"
@@ -80,6 +92,10 @@ const News = (props) => {
                   />
                 </div>
               );
+                  }
+                  else{
+                    return null;
+                  }
             })}
           </div>
         </div>
